@@ -47,7 +47,7 @@ The system enforces strict modularity and separation of concerns across 5 primar
 ## 4. Quick Start Guide
 
 ### Dependencies
-- **MATLAB R2021b** or newer.
+- **MATLAB R2023b** or newer.
 - Required Toolboxes: 
   - *Aerospace Blockset*
   - *Stateflow*
@@ -152,14 +152,9 @@ The system operates under the assumption that hardware will fail.
 
 ## 11. Contributions
 **ARYA MGC**  
-Lead Architect | Aerospace / ECE / EEE
+Lead Architect 
 
 *Contributions and pull requests are strictly reviewed against the existing Interface Contracts and require passing CI unit tests.*
 
 ## 12. License & Usage Terms
 This project is licensed under the MIT License - see the `LICENSE` file for details. Academic and commercial utilization is permitted provided appropriate attribution is given. For proprietary integration support, please refer to the contact information.
-
-## 13. Contact & Collaboration
-For inquiries regarding aerospace simulation consulting, firmware targeting, or codebase access, please contact:
-**Email:** [arya.mgc@example.com](mailto:arya.mgc@example.com)  
-**GitHub:** [@ARYA-mgc](https://github.com/ARYA-mgc)
