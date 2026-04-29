@@ -1,0 +1,38 @@
+name: MATLAB Simulation Regression Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Setup MATLAB
+      uses: matlab-actions/setup-matlab@v1
+      
+    - name: Run Master Initialization Script
+      uses: matlab-actions/run-command@v1
+      with:
+        command: 'init_all'
+        
+    - name: Run Unit Tests
+      uses: matlab-actions/run-command@v1
+      with:
+        command: 'cd Validation; run_unit_tests'
+
+    - name: Run Monte Carlo Subset
+      uses: matlab-actions/run-command@v1
+      with:
+        command: 'cd Validation; run_monte_carlo(5)' # Run quick subset of 5 for CI
+
+    - name: Run Codegen Memory Check
+      uses: matlab-actions/run-command@v1
+      with:
+        command: 'cd Codegen; memory_budget_check'
