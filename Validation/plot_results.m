@@ -1,5 +1,87 @@
 function plot_trajectory(t, pos_true, pos_ekf, pos_raw)
-% PLOT_TRAJECTORY  3-D and 2-D trajectory comparison.
+% PLOT_TRAJECTORY  3-D trajectory visualization matching reference image.
+%
+%  Produces a figure with:
+%   - A single 3D trajectory view with West/North/Up axes
+%   - Body X/Y/Z axis markers at the starting position
+%   - Legend: "Body X axis", "Body Y axis", "Body Z axis", "Trajectory"
+%   - Viewing angle and axis ranges matching the reference image
+
+figure('Name', 'Flight Instrument Gauge Visualization', 'Color', 'w', ...
+       'Position', [100 100 640 480]);
+
+%-- Convert NED to display coordinates:
+%   North = pos(1,:)   → plot X axis ("North")
+%   East  = pos(2,:)   → plot Y axis (negated → "West")
+%   Down  = pos(3,:)   → plot Z axis (negated → "Up")
+north = pos_true(1,:);
+west  = -pos_true(2,:);
+up    = -pos_true(3,:);
+
+%-- Plot trajectory as solid black line
+h_traj = plot3(west, north, up, 'k-', 'LineWidth', 1.2);
+hold on; grid on;
+
+%-- Body axis markers at the start position
+origin = [west(1), north(1), up(1)];
+ax_len = 15;   % length of axis arrows
+
+% Compute initial rotation matrix
+r0 = 0; p0 = 0; y0 = 0;  % initial Euler angles (takeoff = level)
+cr=cos(r0); sr=sin(r0); cp=cos(p0); sp=sin(p0); cy=cos(y0); sy=sin(y0);
+R_bn = [cp*cy, -cr*sy+sr*sp*cy, sr*sy+cr*sp*cy;
+        cp*sy,  cr*cy+sr*sp*sy, -sr*cy+cr*sp*sy;
+        -sp,    sr*cp,           cr*cp];
+
+% Body X axis (forward) — black
+bx = R_bn * [ax_len; 0; 0];
+h_bx = plot3([origin(1), origin(1)-bx(2)], ...
+             [origin(2), origin(2)+bx(1)], ...
+             [origin(3), origin(3)-bx(3)], ...
+             'k-', 'LineWidth', 2.0);
+
+% Body Y axis (right) — gray/light
+by = R_bn * [0; ax_len; 0];
+h_by = plot3([origin(1), origin(1)-by(2)], ...
+             [origin(2), origin(2)+by(1)], ...
+             [origin(3), origin(3)-by(3)], ...
+             '-', 'Color', [0.6 0.6 0.6], 'LineWidth', 2.0);
+
+% Body Z axis (down) — blue
+bz = R_bn * [0; 0; ax_len];
+h_bz = plot3([origin(1), origin(1)-bz(2)], ...
+             [origin(2), origin(2)+bz(1)], ...
+             [origin(3), origin(3)-bz(3)], ...
+             'b-', 'LineWidth', 2.0);
+
+%-- Axis labels matching reference image
+xlabel('West');
+ylabel('North');
+zlabel('Up');
+
+%-- Legend matching reference image exactly
+legend([h_bx, h_by, h_bz, h_traj], ...
+       {'Body X axis', 'Body Y axis', 'Body Z axis', 'Trajectory'}, ...
+       'Location', 'northeast', 'FontSize', 9);
+
+%-- Set view angle to match reference image (looking from southwest, elevated)
+view([-37, 30]);
+
+%-- Axis formatting
+ax = gca;
+ax.FontSize = 10;
+ax.GridAlpha = 0.3;
+ax.Box = 'on';
+
+hold off;
+
+%-- Also produce the standard comparison plots
+plot_trajectory_comparison(t, pos_true, pos_ekf, pos_raw);
+end
+
+% =========================================================
+function plot_trajectory_comparison(t, pos_true, pos_ekf, pos_raw)
+% PLOT_TRAJECTORY_COMPARISON  3-D and 2-D trajectory comparison.
 
 figure('Name','Trajectory Comparison','Color','w','Position',[50 50 1200 500]);
 
@@ -22,8 +104,6 @@ plot(pos_true(1,end),pos_true(2,end),'rs','MarkerSize',10,'MarkerFaceColor','r')
 legend('True','EKF','Dead Reckoning','Start','End','Location','best');
 xlabel('X (m)'); ylabel('Y (m)');
 title('Top-Down View (XY Plane)'); grid on; axis equal;
-
-saveas(gcf, fullfile('results','trajectory_comparison.png'));
 end
 
 % =========================================================
@@ -55,8 +135,6 @@ subplot(1,3,3);
 plot(t, vel_err_ekf, 'm', 'LineWidth',1.5);
 xlabel('Time (s)'); ylabel('Velocity Error (m/s)');
 title('3-D Velocity Error (EKF)'); grid on;
-
-saveas(gcf, fullfile('results','error_analysis.png'));
 end
 
 % =========================================================
@@ -74,5 +152,4 @@ for ax = 1:3
     xlabel('Time (s)'); ylabel(labels{ax});
     title(labels{ax}); legend('True','EKF'); grid on;
 end
-saveas(gcf, fullfile('results','attitude_estimation.png'));
 end
