@@ -2,7 +2,7 @@
 
 **A production-ready, multi-rate MATLAB/Simulink architecture for GPS-denied UAV state estimation and robust flight control.**
 
-[![MATLAB](https://img.shields.io/badge/MATLAB-R2021b%2B-orange?logo=mathworks)](https://www.mathworks.com/)
+[![MATLAB](https://img.shields.io/badge/MATLAB-R2023a%20%7C%20R2024a%20%7C%20R2025a%20%7C%20R2026a-orange?logo=mathworks)](https://www.mathworks.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)]()
 [![Code Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen)]()
@@ -21,7 +21,7 @@ This is not a toy model; it is a direct pathway to MISRA-C compliant firmware ge
 
 ## 2. System Architecture Overview
 
-![Simulink Architecture](800px-Drone_ctrl_simulink.png)
+![Simulink Architecture](Docs/simulink_control_architecture.png)
 
 The system enforces strict modularity and separation of concerns across 5 primary domains:
 
@@ -47,7 +47,7 @@ The system enforces strict modularity and separation of concerns across 5 primar
 ## 4. Quick Start Guide
 
 ### Dependencies
-- **MATLAB R2023b** or newer.
+- **MATLAB R2023a / R2024a / R2025a / R2026a** (or newer).
 - Required Toolboxes: 
   - *Aerospace Blockset*
   - *Stateflow*
@@ -65,12 +65,12 @@ The system enforces strict modularity and separation of concerns across 5 primar
 2. **Initialize the Enterprise Parameter Space:**
    Open MATLAB and run the master integration script. This automatically loads all Interface Contracts, Scenarios, and parameters into your workspace.
    ```matlab
-   run('init_all.m')
+   run('Runtime/init_all.m')
    ```
 
 3. **Build and Launch the Simulink Model:**
    ```matlab
-   run('build_ins_simulink_model.m')
+   run('Codegen/build_ins_simulink_model.m')
    ```
 
 4. **Verify Stability (Linearization):**
@@ -101,7 +101,7 @@ The repository adheres to a strict NASA-style hierarchical layout containing ove
 
 ## 6. Example Use Cases & Scenarios
 
-![Fault Tolerance Scenario](UAVInflightFailureRecoveryExample_11.png)
+![Fault Tolerance Scenario](Docs/pid_tuning_results.png)
 
 The `/Scenarios` directory provides programmatic flight test harnesses to stress the system:
 1. **Aggressive Maneuvers (`aggressive_turn_test.m`)**: Validates the feedforward control and rate limits.
@@ -112,20 +112,20 @@ The `/Scenarios` directory provides programmatic flight test harnesses to stress
 
 ## 7. Results, Metrics & Benchmarks
 
-![Control Model Dashboard](controlmodel.png)
+![Control Model Dashboard](Docs/control_model_6dof.png)
 
 When subjected to standard continuous validation runs, the flight stack achieves:
 - **Hover Stability (RMSE)**: Position < 0.2m | Attitude < 1.5° (in 15 knot crosswinds).
 - **State Estimation Drift**: < 2 meters of accumulated drift over 60 seconds during total GPS-denial.
 - **Actuator Latency Resilience**: Stable up to 80ms of artificially injected ESC/CAN-bus latency.
 
-![Metrics Visualization](FlightInstrumentGaugeVisualizationForADroneExample_04.png)
+![Metrics Visualization](Docs/flight_trajectory_3d.png)
 
 ---
 
 ## 8. Validation & Testing Process
 
-![PID Autotuning & Validation](PIDAutotuningMultirotorExample_01.png)
+![PID Autotuning & Validation](Docs/pid_autotuning_block_diagram.png)
 
 Rigorous testing is baked into the architecture:
 - **Monte Carlo Campaigns**: The `run_monte_carlo.m` script programmatically iterates through randomized permutations of mass (±20%), CG offsets, and wind states to prove broad-spectrum controller stability.
@@ -152,9 +152,11 @@ The system operates under the assumption that hardware will fail.
 
 ## 11. Contributions
 **ARYA MGC**  
-Lead Architect 
+Lead Architect | Aerospace / ECE 
 
 *Contributions and pull requests are strictly reviewed against the existing Interface Contracts and require passing CI unit tests.*
 
 ## 12. License & Usage Terms
 This project is licensed under the MIT License - see the `LICENSE` file for details. Academic and commercial utilization is permitted provided appropriate attribution is given. For proprietary integration support, please refer to the contact information.
+
+
