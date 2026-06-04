@@ -20,7 +20,7 @@ addpath(genpath(fileparts(mfilename('fullpath'))));
 
 %% ── 1. Simulation Parameters ────────────────────────────
 dt          = 0.01;          % Time step (100 Hz)
-T_total     = 30;            % Total simulation time (s)
+T_total     = 60;            % Total simulation time (s)
 t           = 0:dt:T_total;
 N           = length(t);
 
